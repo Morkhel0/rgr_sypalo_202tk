@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+
+namespace DifferentialEquations
+{
+    public class RungeKuttaSolver : IOdeSolver
+    {
+        public List<PointD> Solve(
+            Func<double, double, double> f,
+            double x0,
+            double y0,
+            double h,
+            int steps)
+        {
+            List<PointD> result = new List<PointD>();
+
+            double x = x0;
+            double y = y0;
+
+            result.Add(new PointD(x, y));
+
+            for (int i = 0; i < steps; i++)
+            {
+                double k1 = h * f(x, y);
+
+                double k2 = h * f(
+                    x + h / 2,
+                    y + k1 / 2);
+
+                double k3 = h * f(
+                    x + h / 2,
+                    y + k2 / 2);
+
+                double k4 = h * f(
+                    x + h,
+                    y + k3);
+
+                y = y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+
+                x = x + h;
+
+                result.Add(new PointD(x, y));
+            }
+
+            return result;
+        }
+    }
+}
